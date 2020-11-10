@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Title of the document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+</head>
+
+<body>
+    <canvas id="myChart" width="640", height="360"></canvas>
+</body>
+
+<script>
+
+function createChart(data) {
+    var canvas = document.getElementById("myChart");
+    var ctx = canvas.getContext('2d');
+
+    /*
+    var container = canvas.parent();
+    c.attr('width', container.width());
+    c.attr('height', container.height());
+    */
+
+    console.log(data)
+    var chart = new Chart(ctx, {
+        type: 'scatter',
+        data: data,
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    });
+}
+
+
+$(document).ready(function() {
+    $.ajax({
+        url: "api/data",
+        method: 'GET',
+        dataType: 'json',
+        success: function(responseData) {
+           var chartData = {
+                datasets: [{
+                    label: 'Scatter Dataset',
+                    data: responseData
+                }]
+            };
+            createChart(chartData);
+        }
+    })
+});
+
+/*
+    $.ajax({
+        url: $("#myChart").attr("data-url"),
+        dataType: 'json',
+        success: function (data) {
+            scatterChart.data = 
+        }
+    })
+*/
+</script>
+</html> 
