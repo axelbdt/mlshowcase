@@ -1,6 +1,4 @@
-extern crate nalgebra as na;
-
-use na::{Dynamic, Matrix, Matrix2, U2, Vector2, VecStorage};
+use na::{Dynamic, Matrix, Matrix2, Vector2, U2, VecStorage};
 use rand::prelude::*;
 use rand_distr::StandardNormal;
 
@@ -8,7 +6,10 @@ use rand_distr::StandardNormal;
 // two rows using 32-bit floats.
 type Matrix2xXf32 = Matrix<f32, U2, Dynamic, VecStorage<f32, U2, Dynamic>>;
 
-pub fn generate_dataset(seed: u64) -> Vec<Vector2<f32>> {
+pub type Sample = Vector2<f32>;
+pub type Data = Vec<Sample>;
+
+pub fn generate_dataset(seed: u64) -> Data {
     let mut rng = StdRng::seed_from_u64(seed);
 
     let sigma: Matrix2<f32> = Matrix2::new(2.0, 1.0 ,1.0, 3.0);
@@ -22,7 +23,7 @@ pub fn generate_bivariate_normal_sample(
     sigma: Matrix2<f32>,
     nb_points: u64,
     rng: &mut StdRng
-    ) -> Vec<Vector2<f32>> {
+    ) -> Data {
     let sqrt_sigma = sigma.cholesky().unwrap().l();
 
     let sample = Matrix2xXf32::from_distribution(nb_points as usize, &StandardNormal, rng);
