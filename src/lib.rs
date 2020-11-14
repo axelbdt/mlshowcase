@@ -4,6 +4,7 @@
 extern crate rocket;
 
 mod routes;
+mod generation;
 
 use rocket_contrib::serve::StaticFiles;
 

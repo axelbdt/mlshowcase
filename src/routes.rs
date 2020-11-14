@@ -1,11 +1,8 @@
-use rand::prelude::*;
-use rand_distr::{Distribution, StandardNormal};
-use rand::rngs::StdRng;
+use crate::generation;
 
 use rocket_contrib::json::Json;
 
 use serde::Serialize;
-
 
 #[derive(Serialize)]
 pub struct Point {
@@ -13,27 +10,20 @@ pub struct Point {
     y: f32
 }
 
+impl Point {
+    fn from_array(p: &[f32;2]) -> Point {
+        Point {
+            x: p[0],
+            y: p[1]
+        }
+    }
+}
+
 #[get("/data")]
 pub fn data() -> Json<Vec<Point>> {
-    let mut rng = StdRng::seed_from_u64(42);
 
-    let mu: [f32; 2] = [6.0, 5.0];
-    let sigma: [[f32; 2]; 2] = [[2.0, 1.0], [1.0, 3.0]];
-    
-    // Cholesky decomposition
-    let a = sigma[0][0].sqrt();
-    let b = sigma[0][1] / a;
-    let c = (sigma[1][1]).sqrt() - b * b;
-
-    let sqrt_sigma = [ [a, 0.], [b, c]];
-
-    let v: Vec<Point> = (0..100).map(|_| {
-        let x0: f32 = rng.sample(StandardNormal);
-        let y0: f32 = rng.sample(StandardNormal);
-        let x = x0 * sqrt_sigma[0][0] + mu[0];
-        let y = x0 * sqrt_sigma[1][0] + y0 * sqrt_sigma[1][1] + mu[1];
-        Point {x, y}
-    }).collect();
+    let v = generation::generate_dataset(42)
+        .iter().map(Point::from_array).collect();
 
     Json(v)
 }
