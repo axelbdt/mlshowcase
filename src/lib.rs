@@ -7,11 +7,15 @@ extern crate nalgebra as na;
 
 mod routes;
 mod generation;
+mod processing;
 
 use rocket_contrib::serve::StaticFiles;
 
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", StaticFiles::from("static"))
-        .mount("/api", routes![routes::data])
+        .mount("/api", routes![
+               routes::data,
+               routes::kmeans],
+        )
 }

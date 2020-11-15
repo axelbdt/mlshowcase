@@ -1,6 +1,8 @@
 use crate::generation;
 use crate::generation::{Data, Sample};
 
+use crate::processing;
+
 use rocket_contrib::json::Json;
 
 use serde::Serialize;
@@ -30,5 +32,11 @@ fn data_to_points(data: Data) -> Vec<Point> {
 #[get("/data")]
 pub fn data() -> Json<Vec<Point>> {
     let v = data_to_points(generation::generate_dataset(42));
+    Json(v)
+}
+
+#[get("/kmeans")]
+pub fn kmeans() -> Json<Vec<Point>> {
+    let v = data_to_points(processing::kmeans());
     Json(v)
 }
