@@ -1,4 +1,4 @@
-use na::{Dynamic, Matrix, Matrix2, Vector2, U2, VecStorage};
+use na::{Dynamic, Matrix, Matrix2, VecStorage, Vector2, U2};
 use rand::prelude::*;
 use rand_distr::StandardNormal;
 
@@ -12,9 +12,9 @@ pub type Data = Vec<Sample>;
 pub fn generate_dataset(seed: u64) -> Data {
     let mut rng = StdRng::seed_from_u64(seed);
 
-    let sigma: Matrix2<f32> = Matrix2::new(2.0, 1.0 ,1.0, 3.0);
+    let sigma: Matrix2<f32> = Matrix2::new(2.0, 1.0, 1.0, 3.0);
     let mu: Vector2<f32> = Vector2::new(6.0, 5.0);
-    
+
     generate_bivariate_normal_sample(mu, sigma, 100, &mut rng)
 }
 
@@ -22,8 +22,8 @@ pub fn generate_bivariate_normal_sample(
     mu: Vector2<f32>,
     sigma: Matrix2<f32>,
     nb_points: u64,
-    rng: &mut StdRng
-    ) -> Data {
+    rng: &mut StdRng,
+) -> Data {
     let sqrt_sigma = sigma.cholesky().unwrap().l();
 
     let sample = Matrix2xXf32::from_distribution(nb_points as usize, &StandardNormal, rng);
