@@ -1,4 +1,3 @@
-use crate::generation;
 use crate::generation::{Data, Sample};
 
 use std::collections::HashMap;
@@ -63,21 +62,20 @@ fn update_centroids(
     )
 }
 
-pub fn kmeans(k: usize) -> Data {
+pub fn kmeans(k: usize, data: &Data) -> Data {
     if k == 0 {
         return Data::new();
     }
-    let data = generation::generate_dataset(42);
     let mut centroids = init_centroids(&data, k);
     let mut assignments = vec![centroids.len(); data.len()];
-    let result = loop {
+    for _ in 0..100 {
         let (new_centroids, new_assignments, updated) =
             update_centroids(&data, &centroids, &assignments);
         centroids = new_centroids;
         assignments = new_assignments;
         if updated == false {
-            break centroids;
+            break;
         }
-    };
-    result
+    }
+    centroids
 }

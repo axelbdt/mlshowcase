@@ -8,6 +8,7 @@ extern crate rocket_contrib;
 
 extern crate nalgebra as na;
 
+mod error;
 mod generation;
 mod processing;
 mod routes;

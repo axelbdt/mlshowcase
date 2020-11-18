@@ -61,13 +61,18 @@ function queryKMeans() {
         dataType: 'json',
         data: {}, 
         success: function(responseData) {
-            var dataset = {
-                label: "Centroids",
-                borderColor: window.chartColors.red,
-                backgroundColor: color(window.chartColors.red).alpha(0.8).rgbString(),
-                data: responseData,
-            };
-            chartAddDataset(dataset);
+            if("Data" in responseData) {
+                var dataset = {
+                    label: "Centroids",
+                    borderColor: window.chartColors.red,
+                    backgroundColor: color(window.chartColors.red).alpha(0.8).rgbString(),
+                    data: responseData["Data"],
+                };
+                chartAddDataset(dataset);
+            }
+            else if ("Error" in responseData) {
+                console.log(responseData["Error"])
+            }
         }
     })
 }
@@ -79,8 +84,13 @@ $(document).ready(function() {
         method: 'GET',
         dataType: 'json',
         success: function(responseData) {
-            createChart(responseData);
-            queryKMeans();
+            if("Data" in responseData) {
+                createChart(responseData["Data"]);
+                queryKMeans();
+            }
+            else if ("Error" in responseData) {
+                console.log(responseData["Error"])
+            }
         }
     })
 
