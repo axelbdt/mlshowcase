@@ -10,6 +10,10 @@ edition = "2018"
 nalgebra = { version = "0.20", features = ["serde-serialize"] }
 rand = "0.7"
 rand_distr = "0.3"
-rocket = "0.4.5"
-rocket_contrib = "0.4.5"
+rocket = "0.4.6"
 serde = { version = "1.0", features = ["derive"] }
+
+[dependencies.rocket_contrib]
+version = "0.4.6"
+default-features = false
+features = ["diesel_postgres_pool", "json", "serve"]
