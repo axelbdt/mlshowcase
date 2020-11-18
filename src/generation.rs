@@ -21,12 +21,12 @@ pub fn generate_dataset(seed: u64) -> Data {
 pub fn generate_bivariate_normal_sample(
     mu: Vector2<f32>,
     sigma: Matrix2<f32>,
-    nb_points: u64,
+    nb_points: usize,
     rng: &mut StdRng,
 ) -> Data {
     let sqrt_sigma = sigma.cholesky().unwrap().l();
 
-    let sample = Matrix2xXf32::from_distribution(nb_points as usize, &StandardNormal, rng);
+    let sample = Matrix2xXf32::from_distribution(nb_points, &StandardNormal, rng);
     let data_zero_mean = sqrt_sigma * sample;
 
     data_zero_mean.column_iter().map(|c| c + mu).collect()

@@ -13,14 +13,14 @@ pub struct Point {
     y: f32,
 }
 
-impl Point {
-    fn from_sample(v: &Sample) -> Self {
-        Point { x: v[0], y: v[1] }
+impl From<Sample> for Point {
+    fn from(s: Sample) -> Self {
+        Point { x: s[0], y: s[1] }
     }
 }
 
 fn data_to_points(data: Data) -> Vec<Point> {
-    data.iter().map(Point::from_sample).collect()
+    data.into_iter().map(|s| s.into()).collect()
 }
 
 #[get("/data")]
