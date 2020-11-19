@@ -6,14 +6,18 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 
+#[macro_use]
+extern crate diesel;
+
 extern crate nalgebra as na;
 
 mod error;
 mod generation;
+mod models;
 mod processing;
 mod routes;
+mod schema;
 
-use rocket_contrib::databases::diesel;
 use rocket_contrib::serve::StaticFiles;
 
 #[database("mlshowcase")]

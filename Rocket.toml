@@ -1,2 +1,0 @@
-[global.databases]
-mlshowcase = { url = "postgres://mlshowcase:mlshowcase@localhost/mlshowcase"}
