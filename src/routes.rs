@@ -1,9 +1,11 @@
 use crate::error::Error;
 use crate::generation;
 use crate::generation::{Data, Sample};
-
 use crate::processing;
+use crate::schema::datasets;
+use crate::DbConn;
 
+use diesel::prelude::*;
 use rocket_contrib::json::Json;
 
 use serde::Serialize;
@@ -40,19 +42,25 @@ impl From<Sample> for Point {
 }
 
 #[get("/data")]
-pub fn data() -> Json<APIResult> {
-    Json(match generation::generate_dataset(42) {
+pub fn data(conn: DbConn) -> Json<APIResult> {
+    let dataset = datasets::table
+        .first(&*conn)
+        .expect("Database should not be empty");
+    Json(match generation::generate_dataset(&dataset) {
         Ok(data) => data.into(),
         Err(e) => e.into(),
     })
 }
 
 #[get("/kmeans")]
-pub fn kmeans() -> Json<APIResult> {
-    let data = match generation::generate_dataset(42) {
-        Ok(data) => data,
+pub fn kmeans(conn: DbConn) -> Json<APIResult> {
+    let dataset = datasets::table
+        .first(&*conn)
+        .expect("Database should not be empty");
+    let centroids = match generation::generate_dataset(&dataset) {
+        Ok(centroids) => centroids,
         Err(e) => return Json(e.into()),
     };
-    let v = processing::kmeans(3, &data);
+    let v = processing::kmeans(3, &centroids);
     Json(v.into())
 }

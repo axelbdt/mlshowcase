@@ -21,7 +21,7 @@ mod schema;
 use rocket_contrib::serve::StaticFiles;
 
 #[database("mlshowcase")]
-struct DbConn(diesel::PgConnection);
+pub struct DbConn(diesel::PgConnection);
 
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()

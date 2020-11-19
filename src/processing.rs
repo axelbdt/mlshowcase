@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use rand::prelude::*;
 
 fn init_centroids(data: &Data, k: usize) -> Data {
-    let mut rng = StdRng::seed_from_u64(13);
+    let mut rng = StdRng::seed_from_u64(12);
     data.choose_multiple(&mut rng, k as usize)
         .cloned()
         .collect()
@@ -63,12 +63,12 @@ fn update_centroids(
 }
 
 pub fn kmeans(k: usize, data: &Data) -> Data {
-    if k == 0 {
+    if k == 0 || data.len() == 0 {
         return Data::new();
     }
     let mut centroids = init_centroids(&data, k);
     let mut assignments = vec![centroids.len(); data.len()];
-    for _ in 0..100 {
+    for _ in 0..1000 {
         let (new_centroids, new_assignments, updated) =
             update_centroids(&data, &centroids, &assignments);
         centroids = new_centroids;
