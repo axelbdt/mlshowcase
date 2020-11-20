@@ -1,16 +1,15 @@
 use crate::error::Error;
 use crate::models::dataset::{Dataset, Gaussian};
 
-use na::{Dynamic, Matrix, VecStorage, Vector2, U2};
+use super::Data;
+
+use na::{Dynamic, Matrix, VecStorage, U2};
 use rand::prelude::*;
 use rand_distr::StandardNormal;
 
 // Half-dynamically sized and dynamically allocated matrix with
 // two rows using 32-bit floats.
 type Matrix2xXf32 = Matrix<f32, U2, Dynamic, VecStorage<f32, U2, Dynamic>>;
-
-pub type Sample = Vector2<f32>;
-pub type Data = Vec<Sample>;
 
 pub fn generate_dataset(dataset: &Dataset) -> Result<Data, Error> {
     //let dataset = mock_dataset();
