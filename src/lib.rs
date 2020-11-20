@@ -11,6 +11,7 @@ extern crate diesel;
 
 extern crate nalgebra as na;
 
+mod db;
 mod error;
 mod generation;
 mod models;

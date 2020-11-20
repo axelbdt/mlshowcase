@@ -1,11 +1,10 @@
+use crate::db::datasets;
 use crate::error::Error;
 use crate::generation;
 use crate::generation::{Data, Sample};
 use crate::processing;
-use crate::schema::datasets;
 use crate::DbConn;
 
-use diesel::prelude::*;
 use rocket_contrib::json::Json;
 
 use serde::Serialize;
@@ -41,26 +40,29 @@ impl From<Sample> for Point {
     }
 }
 
-#[get("/data")]
-pub fn data(conn: DbConn) -> Json<APIResult> {
-    let dataset = datasets::table
-        .first(&*conn)
-        .expect("Database should not be empty");
-    Json(match generation::generate_dataset(&dataset) {
-        Ok(data) => data.into(),
-        Err(e) => e.into(),
-    })
+#[get("/data?<dataset_id>")]
+pub fn data(conn: DbConn, dataset_id: i32) -> Option<Json<APIResult>> {
+    let dataset = match datasets::find_by_id(&conn, dataset_id) {
+        Some(dataset) => dataset,
+        None => return None,
+    };
+    let data = match generation::generate_dataset(&dataset) {
+        Ok(data) => data,
+        Err(_) => return None,
+    };
+    Some(Json(data.into()))
 }
 
-#[get("/kmeans")]
-pub fn kmeans(conn: DbConn) -> Json<APIResult> {
-    let dataset = datasets::table
-        .first(&*conn)
-        .expect("Database should not be empty");
-    let centroids = match generation::generate_dataset(&dataset) {
-        Ok(centroids) => centroids,
-        Err(e) => return Json(e.into()),
+#[get("/kmeans?<dataset_id>&<k>")]
+pub fn kmeans(conn: DbConn, dataset_id: i32, k: usize) -> Option<Json<APIResult>> {
+    let dataset = match datasets::find_by_id(&conn, dataset_id) {
+        Some(dataset) => dataset,
+        None => return None,
     };
-    let v = processing::kmeans(3, &centroids);
-    Json(v.into())
+    let data = match generation::generate_dataset(&dataset) {
+        Ok(data) => data,
+        Err(_) => return None,
+    };
+    let centroids = processing::kmeans(k, &data);
+    Some(Json(centroids.into()))
 }

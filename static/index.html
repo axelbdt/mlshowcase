@@ -56,7 +56,7 @@ function chartAddDataset(dataset) {
 
 function queryKMeans() {
     $.ajax({
-        url: "api/kmeans",
+        url: "api/kmeans?dataset_id=1&k=3",
         method: 'GET',
         dataType: 'json',
         data: {}, 
@@ -80,7 +80,7 @@ function queryKMeans() {
 
 $(document).ready(function() {
     $.ajax({
-        url: "api/data",
+        url: "api/data?dataset_id=1",
         method: 'GET',
         dataType: 'json',
         success: function(responseData) {
