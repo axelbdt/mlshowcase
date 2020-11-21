@@ -18,5 +18,5 @@ pub fn kmeans(conn: DbConn, dataset_id: i32, k: usize) -> Option<Json<APIResult>
         Err(_) => return None,
     };
     let centroids = processing::kmeans(k, &data);
-    Some(Json(centroids.into()))
+    Some(Json(APIResult::new(centroids)))
 }

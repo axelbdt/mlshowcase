@@ -20,12 +20,16 @@ mod schema;
 
 use rocket_contrib::serve::StaticFiles;
 
-#[database("mlshowcase")]
-pub struct DbConn(diesel::PgConnection);
-
 pub fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", StaticFiles::from("static"))
-        .mount("/api", routes![routes::data::data, routes::kmeans::kmeans])
-        .attach(DbConn::fairing())
+        .mount(
+            "/api",
+            routes![
+                routes::datasets::get_ids,
+                routes::data::data,
+                routes::kmeans::kmeans
+            ],
+        )
+        .attach(db::DbConn::fairing())
 }

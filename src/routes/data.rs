@@ -16,5 +16,5 @@ pub fn data(conn: DbConn, dataset_id: i32) -> Option<Json<APIResult>> {
         Ok(data) => data,
         Err(_) => return None,
     };
-    Some(Json(data.into()))
+    Some(Json(APIResult::new(data)))
 }

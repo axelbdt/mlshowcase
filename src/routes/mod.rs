@@ -1,26 +1,19 @@
 use crate::data::{Data, Sample};
-use crate::error::Error;
 use serde::Serialize;
 
 pub mod data;
+pub mod datasets;
 pub mod kmeans;
 
 #[derive(Serialize)]
-pub enum APIResult {
-    Data(Vec<Point>),
-    Error(Error),
+pub struct APIResult {
+    data: Vec<Point>,
 }
 
-impl From<Error> for APIResult {
-    fn from(e: Error) -> Self {
-        APIResult::Error(e)
-    }
-}
-
-impl From<Data> for APIResult {
-    fn from(data: Data) -> Self {
-        let points = data.into_iter().map(|s| s.into()).collect();
-        APIResult::Data(points)
+impl APIResult {
+    fn new(data: Data) -> Self {
+        let data = data.iter().map(|s| (*s).into()).collect();
+        APIResult { data }
     }
 }
 

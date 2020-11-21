@@ -5,7 +5,7 @@ use diesel::Queryable;
 
 use na::{Matrix2, Vector2};
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use serde_json;
 
 #[derive(Queryable)]
@@ -15,7 +15,7 @@ pub struct Dataset {
     pub gmm: Vec<Gaussian>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 pub struct Gaussian {
     pub mean: Vector2<f32>,
     pub cov: Matrix2<f32>,

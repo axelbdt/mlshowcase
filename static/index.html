@@ -9,12 +9,45 @@
 
 <body>
     <canvas id="myChart" width="640", height="360"></canvas>
+    
+    <form id="chartForm" method="GET" target="/">
+        <p>
+            <label for="dataset_id">Dataset :</label>
+            <select id="dataset_id" name="dataset_id">
+                <option value="" disabled selected hidden>Select dataset</option>
+            </select>
+            <label for="k">Cluster number k :</label>
+            <input type="number" id="k" name="k" min="1"/>
+            <input type="submit" value="Go!" />
+        </p>
+
+    </form>
 </body>
 
 <script>
 
 var chart;
 var color = Chart.helpers.color;
+
+var dataset_id;
+var k;
+
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+function populateDatasetOptions(select, datasets) {
+    datasets.forEach(function(dataset) {
+        console.log(dataset);
+        var opt = document.createElement("option");
+        opt.value= dataset['id'];
+        opt.innerHTML = `no. ${dataset['id']}`;
+        select.append(opt);
+    });
+}
 
 function createChart(data) {
     var canvas = document.getElementById("myChart");
@@ -56,43 +89,56 @@ function chartAddDataset(dataset) {
 
 function queryKMeans() {
     $.ajax({
-        url: "api/kmeans?dataset_id=1&k=3",
+        url: `api/kmeans?dataset_id=${dataset_id}&k=${k}`,
         method: 'GET',
         dataType: 'json',
         data: {}, 
         success: function(responseData) {
-            if("Data" in responseData) {
-                var dataset = {
-                    label: "Centroids",
-                    borderColor: window.chartColors.red,
-                    backgroundColor: color(window.chartColors.red).alpha(0.8).rgbString(),
-                    data: responseData["Data"],
-                };
-                chartAddDataset(dataset);
-            }
-            else if ("Error" in responseData) {
-                console.log(responseData["Error"])
-            }
+            var dataset = {
+                label: "Centroids",
+                borderColor: window.chartColors.red,
+                backgroundColor: color(window.chartColors.red).alpha(0.8).rgbString(),
+                data: responseData["data"],
+            };
+            chartAddDataset(dataset);
         }
     })
 }
 
 
 $(document).ready(function() {
+    // Parse query string for dataset_id and k values
+    dataset_id = parseInt(getUrlParameter("dataset_id"));
+    k = parseInt(getUrlParameter("k"));
+    if (isNaN(dataset_id)) {
+        dataset_id = 1;
+    }
+    if (isNaN(k)) {
+        k = 3;
+    }
+    $('#k').attr("value", k);
+
+    var datasets = [{"id": 1}, {"id": 2}];
+    var datasetSelect = $('#dataset_id');
     $.ajax({
-        url: "api/data?dataset_id=1",
+        url: "api/datasets/ids",
         method: 'GET',
         dataType: 'json',
         success: function(responseData) {
-            if("Data" in responseData) {
-                createChart(responseData["Data"]);
-                queryKMeans();
-            }
-            else if ("Error" in responseData) {
-                console.log(responseData["Error"])
-            }
+            datasets = responseData['datasets'];
+            populateDatasetOptions(datasetSelect, datasets);
         }
-    })
+    });
+    
+    $.ajax({
+        url: `api/data?dataset_id=${dataset_id}`,
+        method: 'GET',
+        dataType: 'json',
+        success: function(responseData) {
+            createChart(responseData["data"]);
+            queryKMeans();
+        }
+    });
 
 });
 
