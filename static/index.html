@@ -2,13 +2,22 @@
 <html>
 <head>
     <title>k-means clustering</title>
+    <link rel="stylesheet" href="style/mvp.css">
+    <link rel="stylesheet" href="style/style.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js">/* JQuery */</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js">/* Chart.js */</script>
     <script src="https://cdn.jsdelivr.net/gh/chartjs/Chart.js/samples/utils.js">/* Chart.js utils*/</script>
 </head>
 
 <body>
-    <canvas id="myChart" width="640", height="360"></canvas>
+    <div id="content">
+    <h1>K means clustering</h1>
+
+    <p>This chart demonstrate the clustering of two datasets using a kmeans algorithm implemented in the Rust programming language.</p>
+
+    <div id="chartContainer">
+        <canvas id="myChart" width="640", height="360"></canvas>
+    </div>
     
     <form id="chartForm" method="GET" target="/">
         <p>
@@ -20,8 +29,10 @@
             <input type="number" id="k" name="k" min="1"/>
             <input type="submit" value="Go!" />
         </p>
-
     </form>
+
+    <p>The datasets are generated using a gaussian mixture models and represented in blue, in red the corresponding centroids (center of the clusters).</p>
+    </div>
 </body>
 
 <script>
@@ -52,12 +63,7 @@ function createChart(data) {
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext('2d');
 
-    /*
-    var container = canvas.parent();
-    c.attr('width', container.width());
-    c.attr('height', container.height());
-    */
-   var chartData = {
+    var chartData = {
         datasets: [{
             label: 'Scatter Dataset',
             borderColor: window.chartColors.blue,
@@ -67,6 +73,8 @@ function createChart(data) {
     };
 
     chart = new Chart(ctx, {
+        responsive: true,
+        maintainAspectRation: false,
         type: 'scatter',
         data: chartData,
         options: {
