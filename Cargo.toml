@@ -1,8 +1,11 @@
 [package]
 name = "ml-showcase"
 version = "0.1.0"
-authors = ["Axel Baudot <axel.baudot@ecoco2.com>"]
+authors = ["Axel Baudot <axel.baudot@proton.com>"]
 edition = "2018"
+
+[[bin]]
+name = "ml-showcase"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
