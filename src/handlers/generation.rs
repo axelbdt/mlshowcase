@@ -1,7 +1,6 @@
 use crate::error::Error;
+use crate::models::data::Data;
 use crate::models::dataset::{Dataset, Gaussian};
-
-use super::Data;
 
 use na::{Dynamic, Matrix, VecStorage, U2};
 use rand::prelude::*;

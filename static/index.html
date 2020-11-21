@@ -41,7 +41,6 @@ function getUrlParameter(name) {
 
 function populateDatasetOptions(select, datasets) {
     datasets.forEach(function(dataset) {
-        console.log(dataset);
         var opt = document.createElement("option");
         opt.value= dataset['id'];
         opt.innerHTML = `no. ${dataset['id']}`;
@@ -118,7 +117,6 @@ $(document).ready(function() {
     }
     $('#k').attr("value", k);
 
-    var datasets = [{"id": 1}, {"id": 2}];
     var datasetSelect = $('#dataset_id');
     $.ajax({
         url: "api/datasets/ids",
@@ -127,6 +125,7 @@ $(document).ready(function() {
         success: function(responseData) {
             datasets = responseData['datasets'];
             populateDatasetOptions(datasetSelect, datasets);
+            datasetSelect.val(dataset_id);
         }
     });
     

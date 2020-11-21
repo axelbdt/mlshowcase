@@ -1,4 +1,4 @@
-use super::{Data, Sample};
+use crate::models::data::{Data, Sample};
 
 use std::collections::HashMap;
 
